@@ -4,6 +4,8 @@ A single-page HTML template I use to mock up content sites quickly. Pure HTML, C
 
 This is the version I have deployed on Cloudflare Pages.
 
+**Live site:** <https://liminal-film-season.pages.dev/>
+
 ## What's in it
 
 ```
