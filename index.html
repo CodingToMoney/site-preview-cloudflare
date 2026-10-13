@@ -1,0 +1,963 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>示例文本</title>
+  <style>
+    :root {
+      --text: #0b0b0b;
+      --muted: #6f6f6f;
+      --line: rgba(0, 0, 0, 0.28);
+      --soft-line: rgba(0, 0, 0, 0.12);
+      --paper: #fff;
+      --panel: #f3f3f1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--paper);
+      color: var(--text);
+      font-family: "Helvetica Neue", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+    }
+
+    .topbar {
+      position: fixed;
+      z-index: 30;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 66px;
+      border-bottom: 1px solid var(--soft-line);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+    }
+
+    .topbar-inner {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 220px 1fr 220px;
+      align-items: center;
+      padding: 0 64px;
+      gap: 32px;
+    }
+
+    .brand {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .brand small {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 400;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: center;
+      gap: 36px;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .nav a,
+    .ops button {
+      transition: opacity 0.2s ease;
+    }
+
+    .nav a:hover,
+    .ops button:hover {
+      opacity: 0.55;
+    }
+
+    .ops {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .ops button {
+      height: 30px;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+    }
+
+    .icon-button {
+      width: 30px;
+      position: relative;
+    }
+
+    .icon-button::before,
+    .icon-button::after,
+    .hamburger span {
+      content: "";
+      display: block;
+      height: 1px;
+      background: var(--text);
+    }
+
+    .search::before {
+      width: 15px;
+      height: 15px;
+      border: 1px solid var(--text);
+      border-radius: 50%;
+      background: transparent;
+      position: absolute;
+      left: 6px;
+      top: 5px;
+    }
+
+    .search::after {
+      width: 7px;
+      transform: rotate(45deg);
+      position: absolute;
+      right: 5px;
+      bottom: 6px;
+    }
+
+    .hamburger {
+      display: grid;
+      place-items: center;
+      gap: 5px;
+    }
+
+    .hamburger::before,
+    .hamburger::after,
+    .hamburger span {
+      width: 22px;
+    }
+
+    .hero {
+      margin-top: 66px;
+      height: min(760px, calc(100vh - 66px));
+      min-height: 520px;
+      background: #ddd url("assets/hero.jpg") center / cover no-repeat;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0) 45%, rgba(0,0,0,0.16));
+      pointer-events: none;
+    }
+
+    .caption {
+      position: absolute;
+      left: 64px;
+      bottom: 32px;
+      z-index: 1;
+      color: #fff;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .detail {
+      padding: 96px 64px 112px;
+    }
+
+    .wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .title-row {
+      display: grid;
+      grid-template-columns: 48% 52%;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 72px;
+    }
+
+    h1 {
+      max-width: 620px;
+      font-size: clamp(38px, 5vw, 80px);
+      font-weight: 400;
+      line-height: 1.02;
+    }
+
+    .summary {
+      border-left: 1px solid var(--line);
+      padding-left: 72px;
+      display: grid;
+      align-content: end;
+      gap: 24px;
+      min-height: 260px;
+    }
+
+    .summary p,
+    .article p {
+      color: #202020;
+      font-size: 18px;
+      line-height: 2;
+      font-weight: 300;
+    }
+
+    .meta-line {
+      display: flex;
+      gap: 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .content-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 72px;
+      padding-top: 56px;
+    }
+
+    .article {
+      display: grid;
+      gap: 28px;
+      max-width: 760px;
+    }
+
+    .text-box {
+      min-height: 112px;
+      border: 1px solid var(--soft-line);
+      background: #fafafa;
+      padding: 28px;
+      display: grid;
+      align-items: center;
+    }
+
+    .side-info {
+      border-left: 1px solid var(--line);
+      padding-left: 40px;
+      align-self: start;
+    }
+
+    .info-row {
+      padding: 0 0 26px;
+      margin-bottom: 26px;
+      border-bottom: 1px solid var(--soft-line);
+    }
+
+    .info-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-row dt {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+
+    .info-row dd {
+      font-size: 16px;
+      line-height: 1.55;
+    }
+
+    .media-block {
+      border-top: 1px solid var(--text);
+      background: var(--paper);
+    }
+
+    .block-title {
+      height: 96px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 64px;
+      border-bottom: 1px solid var(--line);
+      font-size: 20px;
+      font-weight: 400;
+    }
+
+    .plus {
+      width: 16px;
+      height: 16px;
+      position: relative;
+      flex: 0 0 16px;
+    }
+
+    .plus::before,
+    .plus::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 7px;
+      width: 16px;
+      height: 1px;
+      background: var(--text);
+    }
+
+    .plus::after {
+      transform: rotate(90deg);
+    }
+
+    .media-scroll {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(280px, 31vw);
+      gap: 28px;
+      overflow-x: auto;
+      padding: 40px 64px 72px;
+      scrollbar-width: none;
+    }
+
+    .media-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .media-card {
+      min-width: 0;
+    }
+
+    .media-img {
+      aspect-ratio: 16 / 10;
+      background: var(--panel);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .media-img img {
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.45s ease;
+    }
+
+    .media-card:hover img {
+      transform: scale(1.035);
+    }
+
+    .play {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    .play::before {
+      content: "";
+      width: 54px;
+      height: 54px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      background:
+        linear-gradient(90deg, transparent 0 38%, #fff 38% 45%, transparent 45%) center / 100% 100%;
+    }
+
+    .card-name {
+      margin-top: 16px;
+      font-size: 16px;
+      line-height: 1.35;
+    }
+
+    .card-cat {
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .related {
+      border-top: 1px solid var(--text);
+      padding: 64px;
+    }
+
+    .related-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 32px;
+      padding-bottom: 42px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .related-head h2 {
+      font-size: 34px;
+      font-weight: 400;
+      line-height: 1.1;
+    }
+
+    .pager {
+      align-self: end;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .list-row {
+      display: grid;
+      grid-template-columns: 32% 1fr;
+      gap: 48px;
+      padding: 48px 0;
+      border-bottom: 1px solid var(--soft-line);
+    }
+
+    .thumb {
+      aspect-ratio: 4 / 3;
+      background: #e8e8e6;
+      overflow: hidden;
+    }
+
+    .thumb img {
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .list-copy {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .list-title {
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .list-meta {
+      border-left: 1px solid var(--line);
+      padding-left: 28px;
+      color: var(--muted);
+      font-size: 13px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .footer {
+      background: #f4f4f2;
+      border-top: 1px solid var(--text);
+      padding: 72px 64px 48px;
+    }
+
+    .footer-grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 72px;
+    }
+
+    .footer-title {
+      font-size: clamp(42px, 7vw, 104px);
+      font-weight: 400;
+      line-height: 0.96;
+    }
+
+    .footer-links {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px 40px;
+      margin-top: 52px;
+      max-width: 620px;
+      font-size: 14px;
+    }
+
+    .newsletter {
+      border-left: 1px solid var(--line);
+      padding-left: 48px;
+      align-self: stretch;
+      display: grid;
+      align-content: space-between;
+      gap: 40px;
+    }
+
+    .qr {
+      width: 112px;
+      height: 112px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      padding: 10px;
+      border: 1px solid var(--text);
+      background: #fff;
+    }
+
+    .qr span {
+      background: var(--text);
+    }
+
+    .newsletter p,
+    .copyright {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      background: rgba(0, 0, 0, 0.48);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      padding: 70px 64px;
+    }
+
+    .overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .menu-panel {
+      height: 100%;
+      background: #fff;
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .close {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 76px;
+      height: 76px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .close::before,
+    .close::after {
+      content: "";
+      position: absolute;
+      top: 38px;
+      left: 27px;
+      width: 22px;
+      height: 1px;
+      background: var(--text);
+    }
+
+    .close::before {
+      transform: rotate(45deg);
+    }
+
+    .close::after {
+      transform: rotate(-45deg);
+    }
+
+    .menu-list {
+      display: grid;
+      gap: 18px;
+      text-align: center;
+      font-size: clamp(24px, 4vw, 48px);
+      font-weight: 400;
+    }
+
+    @media (max-width: 960px) {
+      .topbar {
+        height: 64px;
+      }
+
+      .topbar-inner {
+        grid-template-columns: 1fr auto;
+        padding: 0 24px;
+      }
+
+      .nav,
+      .ops .lang,
+      .ops .font-size {
+        display: none;
+      }
+
+      .ops {
+        gap: 8px;
+      }
+
+      .hero {
+        margin-top: 64px;
+        height: 100vw;
+        min-height: 380px;
+      }
+
+      .caption {
+        left: 24px;
+        bottom: 20px;
+      }
+
+      .detail {
+        padding: 60px 24px;
+      }
+
+      .title-row,
+      .content-row,
+      .footer-grid,
+      .list-row,
+      .list-copy {
+        grid-template-columns: 1fr;
+      }
+
+      .title-row {
+        padding-bottom: 0;
+        border-bottom: 0;
+      }
+
+      h1 {
+        font-size: 38px;
+        margin-bottom: 40px;
+      }
+
+      .summary {
+        min-height: 0;
+        border-left: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 0 0 32px;
+      }
+
+      .summary p,
+      .article p {
+        font-size: 15px;
+      }
+
+      .content-row {
+        gap: 42px;
+        padding-top: 32px;
+      }
+
+      .side-info {
+        grid-row: 1;
+        border-left: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 0 0 8px;
+      }
+
+      .info-row {
+        display: grid;
+        grid-template-columns: 86px 1fr;
+        gap: 16px;
+      }
+
+      .info-row dt {
+        margin-bottom: 0;
+      }
+
+      .block-title,
+      .related,
+      .footer {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+
+      .block-title {
+        height: 82px;
+        font-size: 16px;
+      }
+
+      .media-scroll {
+        grid-auto-columns: minmax(250px, 78vw);
+        padding: 32px 24px 56px;
+      }
+
+      .related {
+        padding-top: 42px;
+        padding-bottom: 42px;
+      }
+
+      .related-head {
+        padding-bottom: 32px;
+      }
+
+      .related-head h2 {
+        font-size: 24px;
+      }
+
+      .list-row {
+        gap: 24px;
+        padding: 36px 0;
+      }
+
+      .list-copy {
+        gap: 24px;
+      }
+
+      .list-title {
+        font-size: 18px;
+      }
+
+      .list-meta {
+        border-left: 0;
+        padding-left: 0;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .newsletter {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+        padding: 40px 0 0;
+      }
+
+      .footer-links {
+        grid-template-columns: 1fr;
+        margin-top: 36px;
+      }
+
+      .overlay {
+        padding: 64px 24px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#">
+        示例文本
+        <small>EXAMPLE TEXT</small>
+      </a>
+      <nav class="nav" aria-label="主导航">
+        <a href="#">示例文本</a>
+        <a href="#">示例文本</a>
+        <a href="#">示例文本</a>
+        <a href="#">示例文本</a>
+        <a href="#">示例文本</a>
+      </nav>
+      <div class="ops">
+        <button class="lang" type="button">EN</button>
+        <button class="font-size" type="button">A+</button>
+        <button class="icon-button search" type="button" aria-label="搜索"></button>
+        <button class="icon-button hamburger" id="openMenu" type="button" aria-label="菜单"><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" aria-label="示例封面图">
+      <div class="caption">示例文本 / 示例文本</div>
+    </section>
+
+    <section class="detail">
+      <div class="wrap">
+        <div class="title-row">
+          <h1>示例文本<br>示例文本</h1>
+          <div class="summary">
+            <p>示例文本。示例文本。示例文本。示例文本。示例文本。示例文本。</p>
+            <div class="meta-line">
+              <span>2026.06.18</span>
+              <span>示例文本</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-row">
+          <article class="article">
+            <div class="text-box">
+              <p>示例文本。示例文本。示例文本。示例文本。示例文本。示例文本。示例文本。示例文本。</p>
+            </div>
+            <div class="text-box">
+              <p>示例文本。示例文本。示例文本。示例文本。示例文本。示例文本。示例文本。</p>
+            </div>
+            <div class="text-box">
+              <p>示例文本。示例文本。示例文本。示例文本。示例文本。示例文本。</p>
+            </div>
+          </article>
+
+          <aside class="side-info" aria-label="详情信息">
+            <dl>
+              <div class="info-row">
+                <dt>示例文本</dt>
+                <dd>示例文本</dd>
+              </div>
+              <div class="info-row">
+                <dt>示例文本</dt>
+                <dd>示例文本<br>示例文本</dd>
+              </div>
+              <div class="info-row">
+                <dt>示例文本</dt>
+                <dd>示例文本</dd>
+              </div>
+              <div class="info-row">
+                <dt>示例文本</dt>
+                <dd>示例文本</dd>
+              </div>
+            </dl>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="media-block">
+      <div class="block-title">
+        <span>示例文本</span>
+        <span class="plus" aria-hidden="true"></span>
+      </div>
+      <div class="media-scroll">
+        <a class="media-card" href="#">
+          <div class="media-img"><img src="assets/gallery-1.jpg" alt="示例图片"></div>
+          <div class="card-name">示例文本</div>
+          <div class="card-cat">示例文本</div>
+        </a>
+        <a class="media-card" href="#">
+          <div class="media-img"><img src="assets/gallery-2.jpg" alt="示例图片"></div>
+          <div class="card-name">示例文本</div>
+          <div class="card-cat">示例文本</div>
+        </a>
+        <a class="media-card" href="#">
+          <div class="media-img"><img src="assets/gallery-3.jpg" alt="示例图片"></div>
+          <div class="card-name">示例文本</div>
+          <div class="card-cat">示例文本</div>
+        </a>
+        <a class="media-card" href="#">
+          <div class="media-img"><img src="assets/hero.jpg" alt="示例图片"></div>
+          <div class="card-name">示例文本</div>
+          <div class="card-cat">示例文本</div>
+        </a>
+      </div>
+    </section>
+
+    <section class="media-block">
+      <div class="block-title">
+        <span>示例文本</span>
+        <span class="plus" aria-hidden="true"></span>
+      </div>
+      <div class="media-scroll">
+        <a class="media-card" href="#">
+          <div class="media-img">
+            <img src="assets/gallery-2.jpg" alt="示例视频封面">
+            <span class="play" aria-hidden="true"></span>
+          </div>
+          <div class="card-name">示例文本</div>
+          <div class="card-cat">示例文本</div>
+        </a>
+        <a class="media-card" href="#">
+          <div class="media-img">
+            <img src="assets/gallery-3.jpg" alt="示例视频封面">
+            <span class="play" aria-hidden="true"></span>
+          </div>
+          <div class="card-name">示例文本</div>
+          <div class="card-cat">示例文本</div>
+        </a>
+        <a class="media-card" href="#">
+          <div class="media-img">
+            <img src="assets/gallery-1.jpg" alt="示例视频封面">
+            <span class="play" aria-hidden="true"></span>
+          </div>
+          <div class="card-name">示例文本</div>
+          <div class="card-cat">示例文本</div>
+        </a>
+      </div>
+    </section>
+
+    <section class="related">
+      <div class="wrap">
+        <div class="related-head">
+          <h2>示例文本</h2>
+          <div class="pager">01 / 03</div>
+        </div>
+        <a class="list-row" href="#">
+          <div class="thumb"><img src="assets/gallery-1.jpg" alt="示例图片"></div>
+          <div class="list-copy">
+            <div class="list-title">示例文本</div>
+            <div class="list-meta">
+              <span>示例文本</span>
+              <span>示例文本</span>
+              <span>示例文本</span>
+            </div>
+          </div>
+        </a>
+        <a class="list-row" href="#">
+          <div class="thumb"><img src="assets/gallery-3.jpg" alt="示例图片"></div>
+          <div class="list-copy">
+            <div class="list-title">示例文本</div>
+            <div class="list-meta">
+              <span>示例文本</span>
+              <span>示例文本</span>
+              <span>示例文本</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-title">示例文本<br>示例文本</div>
+        <div class="footer-links">
+          <a href="#">示例文本</a>
+          <a href="#">示例文本</a>
+          <a href="#">示例文本</a>
+          <a href="#">示例文本</a>
+          <a href="#">示例文本</a>
+          <a href="#">示例文本</a>
+        </div>
+      </div>
+      <div class="newsletter">
+        <div>
+          <div class="qr" aria-label="示例二维码">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <p>示例文本。示例文本。示例文本。示例文本。</p>
+        <div class="copyright">© 2026 示例文本</div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="overlay" id="menuOverlay" aria-hidden="true">
+    <div class="menu-panel">
+      <button class="close" id="closeMenu" type="button" aria-label="关闭菜单"></button>
+      <nav class="menu-list" aria-label="展开菜单">
+        <a href="#">示例文本</a>
+        <a href="#">示例文本</a>
+        <a href="#">示例文本</a>
+        <a href="#">示例文本</a>
+        <a href="#">示例文本</a>
+      </nav>
+    </div>
+  </div>
+
+  <script>
+    const openMenu = document.getElementById("openMenu");
+    const closeMenu = document.getElementById("closeMenu");
+    const menuOverlay = document.getElementById("menuOverlay");
+
+    openMenu.addEventListener("click", () => {
+      menuOverlay.classList.add("open");
+      menuOverlay.setAttribute("aria-hidden", "false");
+    });
+
+    closeMenu.addEventListener("click", () => {
+      menuOverlay.classList.remove("open");
+      menuOverlay.setAttribute("aria-hidden", "true");
+    });
+
+    menuOverlay.addEventListener("click", (event) => {
+      if (event.target === menuOverlay) {
+        menuOverlay.classList.remove("open");
+        menuOverlay.setAttribute("aria-hidden", "true");
+      }
+    });
+  </script>
+</body>
+</html>
