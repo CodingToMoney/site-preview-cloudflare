@@ -2,7 +2,7 @@
 
 A single-page HTML template I use to mock up content sites quickly. Pure HTML, CSS and a tiny bit of vanilla JS — no build step, no framework, no dependencies. Open `index.html` in any browser and it works.
 
-This folder is the version I have deployed on Cloudflare Pages. The twin copy in `AI项目1/site-preview/` is the local working version I iterate on before copying changes over.
+This is the version I have deployed on Cloudflare Pages.
 
 ## What's in it
 
